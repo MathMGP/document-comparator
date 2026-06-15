@@ -46,7 +46,7 @@ REGRAS:
 
 - "equivalent": os valores PRESENTES significam a MESMA coisa? Responda com critério SEMÂNTICO, NÃO textual:
   • Documentos podem estar em IDIOMAS diferentes (um CSI costuma vir em PT e EN). TRADUÇÃO É EQUIVALENTE: Egito=Egypt, CONGELADO=FROZEN, MARÍTIMO=SHIP, "MÚSCULO DIANTEIRO"=SHIN, ACÉM=CHUCK, PESCOÇO=NECK, PALETA=SHOULDER. NÃO marque tradução como divergência.
-  • IGNORE diferença de: acento, maiúscula/minúscula, pontuação, espaços, hífen ("ALFARSI"="AL-FARSI"), abreviação de endereço, e PREFIXO de grupo/filial ("1-GRUPO EXEMPLO / Filial: 2-SUL..."=="SUL..."). Mesma entidade = equivalent:true.
+  • IGNORE diferença de: acento, maiúscula/minúscula, pontuação, espaços, hífen ("EMPRESA ALFA"="ALFA EMPRESA"), abreviação de endereço, e PREFIXO de grupo/filial ("1-GRUPO EXEMPLO / Filial: 2-SUL..."=="SUL..."). Mesma entidade = equivalent:true.
   • equivalent=false SÓ quando há diferença SUBSTANTIVA: número/quantidade diferente, produto a mais/a menos, empresa realmente diferente, identificador que deveria repetir e não bate.
 
 - "should_match": true quando o campo DEVERIA ser igual entre os documentos (contrato, container/lacre, SIF, totais de peso/caixas/peças, importador, exportador, NCM, destino, lista de produtos).
