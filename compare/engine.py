@@ -46,7 +46,7 @@ REGRAS:
 
 - "equivalent": os valores PRESENTES significam a MESMA coisa? Responda com critério SEMÂNTICO, NÃO textual:
   • Documentos podem estar em IDIOMAS diferentes (um CSI costuma vir em PT e EN). TRADUÇÃO É EQUIVALENTE: Egito=Egypt, CONGELADO=FROZEN, MARÍTIMO=SHIP, "MÚSCULO DIANTEIRO"=SHIN, ACÉM=CHUCK, PESCOÇO=NECK, PALETA=SHOULDER. NÃO marque tradução como divergência.
-  • IGNORE diferença de: acento, maiúscula/minúscula, pontuação, espaços, hífen ("ELMIYAH"="EL-MIYAH"), abreviação de endereço, e PREFIXO de grupo/filial ("1-GRUPO FRIBAL / Filial: 2-RIO GRANDE..."=="RIO GRANDE..."). Mesma entidade = equivalent:true.
+  • IGNORE diferença de: acento, maiúscula/minúscula, pontuação, espaços, hífen ("ALFARSI"="AL-FARSI"), abreviação de endereço, e PREFIXO de grupo/filial ("1-GRUPO EXEMPLO / Filial: 2-SUL..."=="SUL..."). Mesma entidade = equivalent:true.
   • equivalent=false SÓ quando há diferença SUBSTANTIVA: número/quantidade diferente, produto a mais/a menos, empresa realmente diferente, identificador que deveria repetir e não bate.
 
 - "should_match": true quando o campo DEVERIA ser igual entre os documentos (contrato, container/lacre, SIF, totais de peso/caixas/peças, importador, exportador, NCM, destino, lista de produtos).
@@ -72,8 +72,8 @@ REGRAS:
   • O campo "Cliente" do Romaneio é o registro interno do EXPORTADOR, NÃO o importador/consignatário do destino. NÃO alinhe "Cliente" do Romaneio com Importador/Consignatário do CO/CSI.
   • "PL" no Romaneio costuma ser a PLACA do veículo, não o lacre. Não confunda com Número do Lacre.
   • Um Romaneio normalmente NÃO traz importador, consignatário, NCM nem lacre-SIF. A ausência desses campos NO ROMANEIO é ESPERADA — NÃO gere alerta nem divergência só porque estão ausentes nele.
-- SIF: compare apenas o NÚMERO DO ESTABELECIMENTO (ex.: 5125). "5125", "SIF 5125" e "025119/SIF5125" são o MESMO SIF (025119 é lacre/sequencial) → equivalent=true.
-- FATURA / NOTA FISCAL: o número de NOTA FISCAL (NF) do Romaneio (ex.: 75680) é DIFERENTE do número de CONTRATO/PEDIDO que o Certificado de Origem rotula como "Fatura" (ex.: 260002). Identificadores de naturezas distintas → should_match=false; NÃO alinhe NF com número de contrato.
+- SIF: compare apenas o NÚMERO DO ESTABELECIMENTO (ex.: 9999). "9999", "SIF 9999" e "000001/SIF9999" são o MESMO SIF (000001 é lacre/sequencial) → equivalent=true.
+- FATURA / NOTA FISCAL: o número de NOTA FISCAL (NF) do Romaneio é DIFERENTE do número de CONTRATO/PEDIDO que o Certificado de Origem rotula como "Fatura". Identificadores de naturezas distintas → should_match=false; NÃO alinhe NF com número de contrato.
 - PESO: NÃO alinhe peso BRUTO com peso LÍQUIDO no mesmo campo (grandezas diferentes). Campos separados "Peso Líquido Total" e "Peso Bruto Total", cada um comparando só o MESMO tipo entre documentos.
 - ALERTAS: gere alerta SÓ quando há algo REAL a conferir (valor divergente, parte faltando, número que deveria bater e não bate). NÃO gere alerta apenas porque um campo está ausente de um documento que estruturalmente não o carrega.
 - "source": trecho REAL e curto do documento. NUNCA invente.

@@ -30,9 +30,9 @@ FAKE = {
     "fields": [
         # REAL numeric divergence -> mismatch (deterministic, ignores model)
         _f("Total de caixas", "numero", True, True,
-           [("D1", "980"), ("D2", "980"), ("D3", "1214")], "D3 difere"),
+           [("D1", "100"), ("D2", "100"), ("D3", "150")], "D3 difere"),
         _f("Peso líquido total", "numero", True, True,
-           [("D1", "22.748,07"), ("D2", "22748,07"), ("D3", "28.003,04")]),
+           [("D1", "10.000,00"), ("D2", "10000,00"), ("D3", "15.000,00")]),
         # language pair -> equivalent True -> must NOT be a mismatch
         _f("País de destino", "texto", True, True,
            [("D1", "Egito"), ("D2", "Egypt"), ("D3", "—")]),
@@ -40,31 +40,31 @@ FAKE = {
            [("D1", "CONGELADO(-18°C)"), ("D2", "FROZEN(-18°C)"), ("D3", "—")]),
         # same entity + group prefix -> equivalent True -> not a mismatch
         _f("Exportador", "texto", True, True,
-           [("D1", "RIO GRANDE COMERCIO DE CARNES LTDA"),
-            ("D2", "RIO GRANDE COMERCIO DE CARNES LTDA"),
-            ("D3", "1-GRUPO FRIBAL / Filial: 2-Rio Grande comercio de carnes Ltda")]),
+           [("D1", "EXPORTADORA SUL LTDA"),
+            ("D2", "EXPORTADORA SUL LTDA"),
+            ("D3", "1-GRUPO ALFA / Filial: 2-Exportadora Sul Ltda")]),
         # each doc's own number -> should_match False -> info, not mismatch
         _f("Nº do documento (próprio)", "texto", False, False,
-           [("D1", "10-00271227/2431/26"), ("D2", "10-00271249/2431/26"),
-            ("D3", "1002/2431/2026")]),
-        # SPLIT SHIPMENT: two CSIs are parts; sum (980+234) == 1214 -> consistent
+           [("D1", "10-00100001/0001/26"), ("D2", "10-00100002/0001/26"),
+            ("D3", "1001/0001/2026")]),
+        # SPLIT SHIPMENT: two CSIs are parts; sum (100+50) == 150 -> consistent
         _f("Total de caixas (soma)", "numero", True, True,
-           [("D3", "1214", "total"), ("D1", "980", "parte"), ("D2", "234", "parte")],
+           [("D3", "150", "total"), ("D1", "100", "parte"), ("D2", "50", "parte")],
            relation="soma"),
         # split where the parts do NOT add up -> real mismatch
         _f("Peso líquido (soma errada)", "numero", True, True,
-           [("D3", "28003,04", "total"), ("D1", "22748,07", "parte"),
+           [("D3", "15000,00", "total"), ("D1", "10000,00", "parte"),
             ("D2", "1000,00", "parte")], relation="soma"),
         # SAFETY NET: model FORGOT relation/roles (relation='igual', no roles),
         # but 700+300 == 1000 -> must be auto-detected as split, NOT a divergence
         _f("Peças (split sem tag)", "numero", True, True,
            [("D3", "1000"), ("D1", "700"), ("D2", "300")], relation="igual"),
-        # AGREEING TOTALS but incomplete parts: 4 docs say ~28094, only 2 of 3
-        # drafts present (sum falls short) -> totals agree -> NOT a divergence
+        # AGREEING TOTALS but incomplete parts: 4 docs say 20000, only 2 of 3
+        # parts present (sum falls short) -> totals agree -> NOT a divergence
         _f("Peso (totais batem, partes incompletas)", "numero", True, True,
-           [("D1", "28094,765", "total"), ("D2", "28094,77", "total"),
-            ("D3", "28094,765", "total"), ("D4", "28094,77", "total"),
-            ("X1", "10600,00", "parte"), ("X2", "16494,77", "parte")],
+           [("D1", "20000,00", "total"), ("D2", "20000,00", "total"),
+            ("D3", "20000,00", "total"), ("D4", "20000,00", "total"),
+            ("X1", "12000,00", "parte"), ("X2", "8000,00", "parte")],
            relation="soma"),
     ],
     "alerts": [{"severity": "alta", "field": "CSI",
@@ -89,7 +89,7 @@ def main() -> int:
     # split shipment that ADDS UP -> NOT a divergence (the bug this round)
     assert by["Total de caixas (soma)"] != "mismatch", by
     sumf = next(f for f in FAKE["fields"] if f["label"] == "Total de caixas (soma)")
-    assert sumf["_sum"]["ok"] and sumf["_sum"]["soma"] == 1214, sumf["_sum"]
+    assert sumf["_sum"]["ok"] and sumf["_sum"]["soma"] == 150, sumf["_sum"]
     assert engine.minority_docs(sumf) == set()        # parts not marked odd
     # split shipment that does NOT add up -> mismatch
     assert by["Peso líquido (soma errada)"] == "mismatch", by
@@ -134,7 +134,7 @@ def main() -> int:
     assert "🟥 3 divergência" in app.verdict.cget("text")
     # alert and the consistent split-shipment arithmetic are both surfaced
     assert "Conferir" in txt and "2 CSI" in txt
-    assert "soma confere" in txt and "= 1214" in txt
+    assert "soma confere" in txt and "= 150" in txt
     assert str(app.send_btn["state"]) == "normal"
     # toggle shows the equivalent (non-divergent) fields
     app.show_all.set(True)
